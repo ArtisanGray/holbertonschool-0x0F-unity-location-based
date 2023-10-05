@@ -28,14 +28,14 @@ public class arGPS : MonoBehaviour
     }
     private void Awake()
     {
-        startNode = Instantiate(prefab, transform.position, transform.rotation);
+        startNode = Instantiate(prefab, transform.position, transform.rotation);//creates the 'Start' node on start of the application.
     }
     // Update is called once per frame
     void Update()
     {
         coordLat.GetComponentsInChildren<Text>()[1].text = Input.location.lastData.latitude.ToString();
         coordLong.GetComponentsInChildren<Text>()[1].text = Input.location.lastData.longitude.ToString();
-        coordAlt.GetComponentsInChildren<Text>()[1].text = Input.location.lastData.altitude.ToString();
+        coordAlt.GetComponentsInChildren<Text>()[1].text = Input.location.lastData.altitude.ToString(); //could be cleaned up with a simple definition, but gives the text UI objects the current value of cords
         currentPos = new Vector2(Input.location.lastData.latitude, Input.location.lastData.longitude);
     }
     public void CalculateDistance()
@@ -48,20 +48,20 @@ public class arGPS : MonoBehaviour
         }
 
     }
-    public void setDestination()
+    public void setDestination() //this is ran when pressing the "set destination" button.
     {
         destPos = new Vector2(currentPos.x, currentPos.y);
-        currentUCS = GPSEncoder.GPSToUCS(destPos);
+        currentUCS = GPSEncoder.GPSToUCS(destPos); //converts the current GPS coordinates to a usable point within Unity space.
         coordUCS.GetComponentsInChildren<Text>()[1].text = currentUCS.ToString();
         Debug.Log(destPos);
         if (endNode)
         {
             Destroy(endNode);
         }
-        endNode = Instantiate(prefab, new Vector3(currentUCS.x, currentUCS.y, currentUCS.z), Quaternion.identity);
+        endNode = Instantiate(prefab, new Vector3(currentUCS.x, currentUCS.y, currentUCS.z), Quaternion.identity);//creates another node, this time with a different name.
         endNode.GetComponentInChildren<Text>().text = "Destination";
     }
-    public float CalculateHaversineDistance(Vector2 fromCoordinates, Vector2 toCoordinates)
+    public float CalculateHaversineDistance(Vector2 fromCoordinates, Vector2 toCoordinates)//use the Haversine method of accounting for arc rotation of the Earth for measuring distance between two points.
     {
         float dLat = DegreesToRadians(toCoordinates.x - fromCoordinates.x);
         float dLon = DegreesToRadians(toCoordinates.y - fromCoordinates.y);
